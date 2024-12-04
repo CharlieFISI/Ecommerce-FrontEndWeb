@@ -1,34 +1,24 @@
-import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { View, Text } from "react-native";
+import { useColorScheme } from "nativewind";
+import "../styles/index.css";
 
-export default function Page() {
+export default function App() {
+  const { colorScheme } = useColorScheme();
+
   return (
-    <View style={styles.container}>
-      <View style={styles.main}>
-        <Text style={styles.title}>Hello World</Text>
-        <Text style={styles.subtitle}>This is the first page of your app.</Text>
-      </View>
+    <View
+      className={`flex-1 items-center justify-center ${
+        colorScheme === "dark" ? "bg-black" : "bg-white"
+      }`}
+    >
+      <Text
+        className={`text-xl font-bold ${
+          colorScheme === "dark" ? "text-white" : "text-blue-600"
+        }`}
+      >
+        Bienvenido a tu aplicación con NativeWind
+      </Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 24,
-  },
-  main: {
-    flex: 1,
-    justifyContent: "center",
-    maxWidth: 960,
-    marginHorizontal: "auto",
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 36,
-    color: "#38434D",
-  },
-});
