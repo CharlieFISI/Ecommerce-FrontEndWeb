@@ -1,24 +1,13 @@
 import React from "react";
-import { View, Text } from "react-native";
-import { useColorScheme } from "nativewind";
+import { Redirect } from "expo-router";
 import "../styles/index.css";
 
-export default function App() {
-  const { colorScheme } = useColorScheme();
+// Web client ID
+// 831409840339-dhtoak9e85o926g9eotf8h813uvsigd4.apps.googleusercontent.com
+// Android client ID
 
-  return (
-    <View
-      className={`flex-1 items-center justify-center ${
-        colorScheme === "dark" ? "bg-black" : "bg-white"
-      }`}
-    >
-      <Text
-        className={`text-xl font-bold ${
-          colorScheme === "dark" ? "text-white" : "text-blue-600"
-        }`}
-      >
-        Bienvenido a tu aplicación con NativeWind
-      </Text>
-    </View>
-  );
-}
+const Index = () => {
+  return <Redirect href='/welcome' />;
+};
+
+export default Index;
