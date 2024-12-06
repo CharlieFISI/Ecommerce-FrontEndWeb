@@ -1,10 +1,25 @@
-import React from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
-import { Link, router } from "expo-router";
+import React, { useState, useEffect } from "react";
+import { View, Pressable } from "react-native";
+import { Link, useRouter } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import Animated, { FadeIn } from "react-native-reanimated";
 
+import { FormTitle } from "../components/FormTitle/FormTitle";
+import { TextInput } from "../components/TextInput/TextInput";
+import { PrimaryButton } from "../components/Buttons/PrimaryButton";
+
 const Login = () => {
+  const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    setIsReady(true);
+  }, []);
+
+  if (!isReady) {
+    return null;
+  }
+
   return (
     <View className='flex-1 px-8 pt-12 bg-black'>
       <Pressable onPress={() => router.back()} className='mb-8'>
@@ -12,43 +27,32 @@ const Login = () => {
       </Pressable>
 
       <Animated.View entering={FadeIn.duration(1000)} className='flex-1'>
-        <Text className='mb-8 text-4xl font-bold text-white'>
-          Iniciar sesión
-        </Text>
+        <FormTitle title='Iniciar sesión' />
 
         <View className='space-y-4'>
-          <View>
-            <Text className='mb-2 text-base text-white'>
-              Email o nombre de usuario
-            </Text>
-            <TextInput
-              className='bg-[#121212] text-white px-4 py-3 rounded-lg'
-              placeholderTextColor='#666'
-              placeholder='Email o nombre de usuario'
-            />
-          </View>
+          <TextInput
+            label='Email o nombre de usuario'
+            placeholder='Email o nombre de usuario'
+          />
 
-          <View>
-            <Text className='mb-2 text-base text-white'>Contraseña</Text>
-            <TextInput
-              className='bg-[#121212] text-white px-4 py-3 rounded-lg'
-              placeholderTextColor='#666'
-              placeholder='Contraseña'
-              secureTextEntry
-            />
-          </View>
+          <TextInput
+            label='Contraseña'
+            placeholder='Contraseña'
+            secureTextEntry
+          />
 
-          <Pressable className='bg-[#4A90E2] py-4 px-6 rounded-full mt-6'>
-            <Text className='text-base font-semibold text-center text-white'>
-              Iniciar sesión
-            </Text>
-          </Pressable>
+          <PrimaryButton
+            title='Iniciar sesión'
+            onPress={() => {
+              /* Lógica para iniciar sesión */
+            }}
+          />
 
           <Link href='/forgot-password' asChild>
             <Pressable className='py-2'>
-              <Text className='text-[#4A90E2] text-center text-base'>
+              <Animated.Text className='text-[#4A90E2] text-center text-base'>
                 ¿Olvidaste tu contraseña?
-              </Text>
+              </Animated.Text>
             </Pressable>
           </Link>
         </View>
@@ -57,4 +61,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export { Login as default };

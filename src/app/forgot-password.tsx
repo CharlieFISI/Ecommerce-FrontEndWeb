@@ -1,10 +1,16 @@
 import React from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
-import { router } from "expo-router";
+import { View, Text, Pressable } from "react-native";
+import { useRouter } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import Animated, { FadeIn } from "react-native-reanimated";
 
+import { FormTitle } from "../components/FormTitle/FormTitle";
+import { TextInput } from "../components/TextInput/TextInput";
+import { PrimaryButton } from "../components/Buttons/PrimaryButton";
+
 const ForgotPassword = () => {
+  const router = useRouter();
+
   return (
     <View className='flex-1 px-8 pt-12 bg-black'>
       <Pressable onPress={() => router.back()} className='mb-8'>
@@ -12,9 +18,7 @@ const ForgotPassword = () => {
       </Pressable>
 
       <Animated.View entering={FadeIn.duration(1000)} className='flex-1'>
-        <Text className='mb-8 text-4xl font-bold text-white'>
-          Recuperar contraseña
-        </Text>
+        <FormTitle title='Recuperar contraseña' />
 
         <Text className='text-[#666] text-base mb-6'>
           Ingresa tu correo electrónico y te enviaremos instrucciones para
@@ -22,24 +26,19 @@ const ForgotPassword = () => {
         </Text>
 
         <View className='space-y-4'>
-          <View>
-            <Text className='mb-2 text-base text-white'>
-              Correo electrónico
-            </Text>
-            <TextInput
-              className='bg-[#121212] text-white px-4 py-3 rounded-lg'
-              placeholderTextColor='#666'
-              placeholder='tu@email.com'
-              keyboardType='email-address'
-              autoCapitalize='none'
-            />
-          </View>
+          <TextInput
+            label='Correo electrónico'
+            placeholder='tu@email.com'
+            keyboardType='email-address'
+            autoCapitalize='none'
+          />
 
-          <Pressable className='bg-[#4A90E2] py-4 px-6 rounded-full mt-6'>
-            <Text className='text-base font-semibold text-center text-white'>
-              Enviar instrucciones
-            </Text>
-          </Pressable>
+          <PrimaryButton
+            title='Enviar instrucciones'
+            onPress={() => {
+              /* Lógica para enviar instrucciones */
+            }}
+          />
 
           <Pressable className='py-2' onPress={() => router.push("/login")}>
             <Text className='text-[#4A90E2] text-center text-base'>

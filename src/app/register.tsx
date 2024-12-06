@@ -1,10 +1,25 @@
-import React from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
-import { router } from "expo-router";
+import React, { useState, useEffect } from "react";
+import { View, Text, Pressable } from "react-native";
+import { useRouter } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import Animated, { FadeIn } from "react-native-reanimated";
 
+import { FormTitle } from "../components/FormTitle/FormTitle";
+import { TextInput } from "../components/TextInput/TextInput";
+import { PrimaryButton } from "../components/Buttons/PrimaryButton";
+
 const Register = () => {
+  const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    setIsReady(true);
+  }, []);
+
+  if (!isReady) {
+    return null;
+  }
+
   return (
     <View className='flex-1 px-8 pt-12 bg-black'>
       <Pressable onPress={() => router.back()} className='mb-8'>
@@ -12,56 +27,36 @@ const Register = () => {
       </Pressable>
 
       <Animated.View entering={FadeIn.duration(1000)} className='flex-1'>
-        <Text className='mb-8 text-4xl font-bold text-white'>Crear cuenta</Text>
+        <FormTitle title='Crear cuenta' />
 
         <View className='space-y-4'>
-          <View>
-            <Text className='mb-2 text-base text-white'>Nombre</Text>
-            <TextInput
-              className='bg-[#121212] text-white px-4 py-3 rounded-lg'
-              placeholderTextColor='#666'
-              placeholder='Tu nombre'
-            />
-          </View>
+          <TextInput label='Nombre' placeholder='Tu nombre' />
 
-          <View>
-            <Text className='mb-2 text-base text-white'>Email</Text>
-            <TextInput
-              className='bg-[#121212] text-white px-4 py-3 rounded-lg'
-              placeholderTextColor='#666'
-              placeholder='tu@email.com'
-              keyboardType='email-address'
-              autoCapitalize='none'
-            />
-          </View>
+          <TextInput
+            label='Email'
+            placeholder='tu@email.com'
+            keyboardType='email-address'
+            autoCapitalize='none'
+          />
 
-          <View>
-            <Text className='mb-2 text-base text-white'>Contraseña</Text>
-            <TextInput
-              className='bg-[#121212] text-white px-4 py-3 rounded-lg'
-              placeholderTextColor='#666'
-              placeholder='Mínimo 8 caracteres'
-              secureTextEntry
-            />
-          </View>
+          <TextInput
+            label='Contraseña'
+            placeholder='Mínimo 8 caracteres'
+            secureTextEntry
+          />
 
-          <View>
-            <Text className='mb-2 text-base text-white'>
-              Confirmar contraseña
-            </Text>
-            <TextInput
-              className='bg-[#121212] text-white px-4 py-3 rounded-lg'
-              placeholderTextColor='#666'
-              placeholder='Confirma tu contraseña'
-              secureTextEntry
-            />
-          </View>
+          <TextInput
+            label='Confirmar contraseña'
+            placeholder='Confirma tu contraseña'
+            secureTextEntry
+          />
 
-          <Pressable className='bg-[#4A90E2] py-4 px-6 rounded-full mt-6'>
-            <Text className='text-base font-semibold text-center text-white'>
-              Crear cuenta
-            </Text>
-          </Pressable>
+          <PrimaryButton
+            title='Crear cuenta'
+            onPress={() => {
+              /* Lógica para crear cuenta */
+            }}
+          />
 
           <Text className='text-[#666] text-center text-sm mt-4'>
             Al registrarte, aceptas nuestros{" "}
@@ -74,4 +69,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export { Register as default };

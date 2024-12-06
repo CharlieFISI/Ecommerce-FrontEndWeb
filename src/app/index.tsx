@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, Pressable, ImageBackground } from "react-native";
+import { View, Text, Image, ImageBackground, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import Animated, {
   useSharedValue,
@@ -8,11 +8,14 @@ import Animated, {
   withDelay,
   FadeIn,
 } from "react-native-reanimated";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { PrimaryButton } from "../components/Buttons/PrimaryButton";
+import { SecondaryButton } from "../components/Buttons/SecondaryButton";
+import { SocialButton } from "../components/Buttons/SocialButton";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -21,7 +24,7 @@ type AppRoutes = "/register" | "/phone-login" | "/facebook-login" | "/login";
 const Welcome = () => {
   const router = useRouter();
   const [userInfo, setUserInfo] = useState(null);
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+  const [request, response, promptAsync] = Google.useAuthRequest({
     webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
     androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
     iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
@@ -55,17 +58,26 @@ const Welcome = () => {
     handleSignInWithGoogle();
   }, [response]);
 
+  useEffect(() => {
+    if (userInfo) {
+      router.replace("/home");
+    }
+  }, [userInfo]);
+
   async function handleSignInWithGoogle() {
     const user = await getLocalUser();
     if (!user) {
       if (response?.type === "success") {
         const { authentication } = response;
-        const accessToken = authentication?.accessToken;
-        console.log(accessToken);
-        // await getUserInfo(accessToken);
+        const accessToken = authentication?.accessToken
+          ? authentication.accessToken
+          : null;
+        await getUserInfo(accessToken);
+        router.replace("/home");
       }
     } else {
       setUserInfo(user);
+      router.replace("/home");
     }
   }
 
@@ -126,45 +138,28 @@ const Welcome = () => {
 
           <Animated.View className='w-full mt-auto' style={contentStyle}>
             <View className='flex flex-col gap-2'>
-              <Pressable
-                className='bg-[#4A90E2] py-4 px-6 rounded-full'
+              <PrimaryButton
+                title='Regístrate gratis'
                 onPress={() => handleNavigation("/register")}
-              >
-                <Text className='text-base text-center text-white font-poppins-semibold'>
-                  Regístrate gratis
-                </Text>
-              </Pressable>
+              />
 
-              <Pressable
-                className='bg-transparent border border-[#404040] py-4 px-6 rounded-full flex-row items-center justify-center'
+              <SocialButton
+                title='Continuar con número de teléfono'
+                icon='mobile1'
                 onPress={() => handleNavigation("/phone-login")}
-              >
-                <AntDesign name='mobile1' size={20} color='#FFFFFF' />
-                <Text className='ml-2 text-base text-center text-white font-poppins-semibold'>
-                  Continuar con número de teléfono
-                </Text>
-              </Pressable>
+              />
 
-              <Pressable
-                className='bg-transparent border border-[#404040] py-4 px-6 rounded-full flex-row items-center justify-center'
-                disabled={!request}
+              <SocialButton
+                title='Continuar con Google'
+                icon='google'
                 onPress={() => promptAsync()}
-              >
-                <AntDesign name='google' size={20} color='#FFFFFF' />
-                <Text className='ml-2 text-base text-center text-white font-poppins-semibold'>
-                  Continuar con Google
-                </Text>
-              </Pressable>
+              />
 
-              <Pressable
-                className='bg-transparent border border-[#404040] py-4 px-6 rounded-full flex-row items-center justify-center'
+              <SocialButton
+                title='Continuar con Facebook'
+                icon='facebook'
                 onPress={() => handleNavigation("/facebook-login")}
-              >
-                <FontAwesome name='facebook' size={20} color='#FFFFFF' />
-                <Text className='ml-2 text-base text-center text-white font-poppins-semibold'>
-                  Continuar con Facebook
-                </Text>
-              </Pressable>
+              />
 
               <Pressable
                 className='py-2'
@@ -182,4 +177,4 @@ const Welcome = () => {
   );
 };
 
-export default Welcome;
+export { Welcome as default };
