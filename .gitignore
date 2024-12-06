@@ -9,6 +9,7 @@ package-lock.json
 dist/
 web-build/
 expo-env.d.ts
+android/
 
 # Native
 *.orig.*
@@ -32,6 +33,7 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
 
 # typescript
 *.tsbuildinfo
