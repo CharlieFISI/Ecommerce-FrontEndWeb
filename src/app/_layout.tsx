@@ -1,9 +1,10 @@
 import React from "react";
-import { Stack } from "expo-router";
+import { Stack, Redirect } from "expo-router";
 import { View } from "react-native";
 import * as Font from "expo-font";
 import { SplashScreen } from "expo-router";
 import "../styles/index.css";
+import { AuthProvider, useAuth } from "../context/AuthContext";
 
 Font.loadAsync({
   "Poppins-Light": require("../assets/fonts/Poppins-Light.ttf"),
@@ -20,25 +21,35 @@ Font.loadAsync({
 
 SplashScreen.hideAsync();
 
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuth();
+  if (!user) {
+    return <Redirect href='/login' />;
+  }
+  return <>{children}</>;
+};
+
 const Layout = () => {
   return (
-    <View className='flex-1 font-sans'>
-      <Stack
-        screenOptions={{
-          contentStyle: {
-            backgroundColor: "#000000",
-          },
-        }}
-      >
-        <Stack.Screen name='index' options={{ headerShown: false }} />
-        <Stack.Screen name='home' options={{ headerShown: false }} />
-        <Stack.Screen name='login' options={{ headerShown: false }} />
-        <Stack.Screen name='register' options={{ headerShown: false }} />
-        <Stack.Screen name='phone-login' options={{ headerShown: false }} />
-        <Stack.Screen name='facebook-login' options={{ headerShown: false }} />
-        <Stack.Screen name='forgot-password' options={{ headerShown: false }} />
-      </Stack>
-    </View>
+    <AuthProvider>
+      <View className='flex-1 font-sans'>
+        <Stack>
+          <Stack.Screen name='index' options={{ headerShown: false }} />
+          <Stack.Screen name='login' options={{ headerShown: false }} />
+          <Stack.Screen name='register' options={{ headerShown: false }} />
+          <Stack.Screen name='phone-login' options={{ headerShown: false }} />
+          <Stack.Screen
+            name='facebook-login'
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='forgot-password'
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name='(protected)' options={{ headerShown: false }} />
+        </Stack>
+      </View>
+    </AuthProvider>
   );
 };
 

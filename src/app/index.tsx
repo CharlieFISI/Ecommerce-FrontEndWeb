@@ -1,34 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Image, ImageBackground, Pressable } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, Image, ImageBackground } from "react-native";
 import { useRouter } from "expo-router";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   withDelay,
-  FadeIn,
 } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
-import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { PrimaryButton } from "../components/Buttons/PrimaryButton";
 import { SecondaryButton } from "../components/Buttons/SecondaryButton";
 import { SocialButton } from "../components/Buttons/SocialButton";
-
-WebBrowser.maybeCompleteAuthSession();
+import { useGoogleAuth } from "../hooks/useGoogleAuth";
 
 type AppRoutes = "/register" | "/phone-login" | "/facebook-login" | "/login";
 
-const Welcome = () => {
+const Index = () => {
   const router = useRouter();
-  const [userInfo, setUserInfo] = useState(null);
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
-    androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
-    iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
-  });
+  const { promptAsync } = useGoogleAuth();
 
   const logoPosition = useSharedValue(0);
   const contentOpacity = useSharedValue(0);
@@ -52,57 +42,6 @@ const Welcome = () => {
 
   const handleNavigation = (route: AppRoutes) => {
     router.push(route);
-  };
-
-  useEffect(() => {
-    handleSignInWithGoogle();
-  }, [response]);
-
-  useEffect(() => {
-    if (userInfo) {
-      router.replace("/home");
-    }
-  }, [userInfo]);
-
-  async function handleSignInWithGoogle() {
-    const user = await getLocalUser();
-    if (!user) {
-      if (response?.type === "success") {
-        const { authentication } = response;
-        const accessToken = authentication?.accessToken
-          ? authentication.accessToken
-          : null;
-        await getUserInfo(accessToken);
-        router.replace("/home");
-      }
-    } else {
-      setUserInfo(user);
-      router.replace("/home");
-    }
-  }
-
-  const getLocalUser = async () => {
-    const data = await AsyncStorage.getItem("@user");
-    return data ? JSON.parse(data) : null;
-  };
-
-  const getUserInfo = async (token: string | null) => {
-    if (!token) return;
-    try {
-      const response = await fetch(
-        "https://www.googleapis.com/userinfo/v2/me",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const user = await response.json();
-      await AsyncStorage.setItem("@user", JSON.stringify(user));
-      setUserInfo(user);
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   return (
@@ -161,14 +100,10 @@ const Welcome = () => {
                 onPress={() => handleNavigation("/facebook-login")}
               />
 
-              <Pressable
-                className='py-2'
+              <SecondaryButton
+                title='Iniciar sesión'
                 onPress={() => handleNavigation("/login")}
-              >
-                <Text className='text-base text-center text-white font-poppins-semibold'>
-                  Iniciar sesión
-                </Text>
-              </Pressable>
+              />
             </View>
           </Animated.View>
         </LinearGradient>
@@ -177,4 +112,4 @@ const Welcome = () => {
   );
 };
 
-export { Welcome as default };
+export { Index as default };

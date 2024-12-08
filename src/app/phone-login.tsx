@@ -12,7 +12,7 @@ import { AntDesign } from "@expo/vector-icons";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { countryCodes } from "../constants/countryCodes";
 
-import { FormTitle } from "../components/FormTitle/FormTitle";
+import { FormTitle } from "../components/Form/FormTitle";
 import { TextInput } from "../components/TextInput/TextInput";
 import { PrimaryButton } from "../components/Buttons/PrimaryButton";
 
