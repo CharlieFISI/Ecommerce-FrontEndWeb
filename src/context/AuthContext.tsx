@@ -29,10 +29,26 @@ type GoogleUser = {
   locale: string;
 };
 
+type FacebookUser = {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  picture: {
+    data: {
+      height: number;
+      is_silhouette: boolean;
+      url: string;
+      width: number;
+    };
+  };
+};
+
 type AuthContextType = {
   user: User | null;
   token: string | null;
   googleUser: GoogleUser | null;
+  facebookUser: FacebookUser | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (
@@ -42,6 +58,7 @@ type AuthContextType = {
     password: string
   ) => Promise<void>;
   authenticateWithGoogle: (token: string) => Promise<void>;
+  authenticateWithFacebook: (token: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -61,6 +78,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     queryFn: async () => {
       const storedGoogleUser = await AsyncStorage.getItem("@googleUser");
       return storedGoogleUser ? JSON.parse(storedGoogleUser) : null;
+    },
+  });
+
+  const { data: facebookUser } = useQuery<FacebookUser | null>({
+    queryKey: ["facebookUser"],
+    queryFn: async () => {
+      const storedFacebookUser = await AsyncStorage.getItem("@facebookUser");
+      return storedFacebookUser ? JSON.parse(storedFacebookUser) : null;
     },
   });
 
@@ -121,11 +146,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await AsyncStorage.removeItem("@user");
       await AsyncStorage.removeItem("@token");
       await AsyncStorage.removeItem("@googleUser");
+      await AsyncStorage.removeItem("@facebookUser");
     },
     onSuccess: () => {
       queryClient.setQueryData(["token"], null);
       queryClient.setQueryData(["user"], null);
       queryClient.setQueryData(["googleUser"], null);
+      queryClient.setQueryData(["facebookUser"], null);
     },
   });
 
@@ -189,6 +216,36 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     },
   });
 
+  const authenticateWithFacebookMutation = useMutation({
+    mutationFn: async (facebookToken: string) => {
+      const userInfoResponse = await fetch(
+        `https://graph.facebook.com/me?access_token=${facebookToken}&fields=id,name,email,first_name,last_name,picture.type(small)`
+      );
+      const facebookUserInfo: FacebookUser = await userInfoResponse.json();
+      await AsyncStorage.setItem(
+        "@facebookUser",
+        JSON.stringify(facebookUserInfo)
+      );
+
+      const email = facebookUserInfo.email;
+      const password = facebookUserInfo.id;
+
+      try {
+        await loginMutation.mutateAsync({ email, password });
+      } catch (loginError) {
+        await registerMutation.mutateAsync({
+          firstName: facebookUserInfo.first_name,
+          lastName: facebookUserInfo.last_name,
+          email,
+          password,
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["facebookUser"] });
+    },
+  });
+
   const login = async (email: string, password: string) => {
     await loginMutation.mutateAsync({ email, password });
   };
@@ -215,16 +272,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await authenticateWithGoogleMutation.mutateAsync(token);
   };
 
+  const authenticateWithFacebook = async (token: string) => {
+    await authenticateWithFacebookMutation.mutateAsync(token);
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user: user ?? null,
         token: token ?? null,
         googleUser: googleUser ?? null,
+        facebookUser: facebookUser ?? null,
         login,
         logout,
         register,
         authenticateWithGoogle,
+        authenticateWithFacebook,
       }}
     >
       {children}

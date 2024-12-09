@@ -24,14 +24,6 @@ SplashScreen.hideAsync();
 
 const queryClient = new QueryClient();
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
-  if (!user) {
-    return <Redirect href='/login' />;
-  }
-  return <>{children}</>;
-};
-
 const Layout = () => {
   return (
     <QueryClientProvider client={queryClient}>
@@ -41,11 +33,6 @@ const Layout = () => {
             <Stack.Screen name='index' options={{ headerShown: false }} />
             <Stack.Screen name='login' options={{ headerShown: false }} />
             <Stack.Screen name='register' options={{ headerShown: false }} />
-            <Stack.Screen name='phone-login' options={{ headerShown: false }} />
-            <Stack.Screen
-              name='facebook-login'
-              options={{ headerShown: false }}
-            />
             <Stack.Screen
               name='forgot-password'
               options={{ headerShown: false }}
