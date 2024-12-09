@@ -15,7 +15,7 @@ export const NAV_ITEMS: NavItem[] = [
     id: "shop",
     name: "Shop",
     icon: "shopping-bag",
-    routes: ["/(protected)/categories", "/(protected)/products-by-category"],
+    routes: ["/(protected)/categories", "/(protected)/product-list"],
   },
   {
     id: "bag",

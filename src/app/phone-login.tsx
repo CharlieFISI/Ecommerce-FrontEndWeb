@@ -46,14 +46,7 @@ const PhoneLogin = () => {
         <FormTitle title='Iniciar sesión con teléfono' />
 
         <View className='space-y-4'>
-          <Text className='mb-2 text-base text-white'>Número de teléfono</Text>
           <View className='flex-row'>
-            <Pressable
-              className='bg-[#121212] rounded-l-lg w-24 justify-center items-center'
-              onPress={() => setModalVisible(true)}
-            >
-              <Text className='text-white'>{selectedCountryCode.code}</Text>
-            </Pressable>
             <TextInput
               className='bg-[#121212] text-white px-4 py-3 rounded-r-lg flex-1'
               placeholderTextColor='#666'
@@ -61,7 +54,7 @@ const PhoneLogin = () => {
               keyboardType='phone-pad'
               value={phoneNumber}
               onChangeText={setPhoneNumber}
-              label='Phone Number'
+              label='Número de teléfono'
             />
           </View>
 

@@ -2,11 +2,20 @@ import React, { createContext, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+type Address = {
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+};
+
 type User = {
   firstName: string;
   lastName: string;
   email: string;
   phone: string | null;
+  address: Address | null;
 };
 
 type GoogleUser = {

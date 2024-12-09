@@ -83,6 +83,12 @@ const Index = () => {
               />
 
               <SocialButton
+                title='Continuar con número de teléfono'
+                icon='mobile1'
+                onPress={() => handleNavigation("/phone-login")}
+              />
+
+              <SocialButton
                 title='Continuar con Google'
                 icon='google'
                 onPress={() => promptAsync()}
