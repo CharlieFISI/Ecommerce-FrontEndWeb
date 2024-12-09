@@ -1,54 +1,69 @@
-import { View, Text, Image, ScrollView, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React from "react";
+import { View, Text, ScrollView, Pressable } from "react-native";
+import { useCategories } from "../../hooks/useCategories";
+import { AntDesign } from '@expo/vector-icons';
+import { useRouter } from "expo-router";
 
 const CategoriesScreen = () => {
+  const { data: categories, isLoading } = useCategories();
+  const router = useRouter();
+
   return (
-    <SafeAreaView className='flex-1 bg-black'>
+    <View className="flex-1 bg-black">
       {/* Header */}
-      <View className='flex-row items-center justify-between p-4 border-b border-gray-800'>
-        <Text className='text-xl font-bold text-white'>Categories</Text>
-        <View className='flex-row space-x-4'>
-          <Text className='text-white'>Women</Text>
-          <Text className='text-gray-400'>Men</Text>
-          <Text className='text-gray-400'>Kids</Text>
-        </View>
-      </View>
-
-      <ScrollView>
-        {/* Summer Sales Banner */}
-        <View className='bg-[#4A90E2] m-4 rounded-lg p-4'>
-          <Text className='text-xl font-bold text-white'>SUMMER SALES</Text>
-          <Text className='text-white opacity-80'>Up to 50% off</Text>
-        </View>
-
-        {/* Category List */}
-        {["New", "Clothes", "Shoes", "Accessories"].map((category) => (
-          <Pressable
-            key={category}
-            className='flex-row items-center p-4 border-b border-gray-800'
-          >
-            <View className='flex-1'>
-              <Text className='text-lg text-white'>{category}</Text>
-            </View>
-            <Image
-              source={{ uri: "/placeholder.svg?height=80&width=80" }}
-              className='w-20 h-20 rounded-lg'
-            />
+      <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-800">
+        <View className="flex-row items-center">
+          <Pressable onPress={() => router.back()} className="mr-4">
+            <AntDesign name="left" size={24} color="white" />
           </Pressable>
-        ))}
-      </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View className='flex-row items-center justify-around py-4 bg-black border-t border-gray-800'>
-        {["Home", "Shop", "Bag", "Favorites", "Profile"].map((item) => (
-          <View key={item} className='items-center'>
-            <View className='w-6 h-6 mb-1 bg-gray-600 rounded-full' />
-            <Text className='text-xs text-gray-400'>{item}</Text>
-          </View>
-        ))}
+          <Text className="text-xl font-bold text-white">Categories</Text>
+        </View>
+        <Pressable>
+          <AntDesign name="search1" size={24} color="white" />
+        </Pressable>
       </View>
-    </SafeAreaView>
+
+      <ScrollView className="flex-1">
+        {/* View All Button */}
+        <Pressable 
+          className="mx-4 mt-4 mb-2"
+          onPress={() => router.push('/product-list')}
+        >
+          <View className="bg-[#4A90E2] py-3 rounded-lg">
+            <Text className="font-semibold text-center text-white">
+              VIEW ALL ITEMS
+            </Text>
+          </View>
+        </Pressable>
+
+        {/* Choose Category Text */}
+        <Text className="px-4 py-2 text-sm text-gray-400">
+          Choose category
+        </Text>
+
+        {/* Categories List */}
+        {!isLoading && categories && (
+          <View className="px-4">
+            {categories.map((category) => (
+              <Pressable
+                key={category.id}
+                className="py-4 border-b border-gray-800"
+                onPress={() => router.push({
+                  pathname: '/product-list',
+                  params: { categoryId: category.id }
+                })}
+              >
+                <Text className="text-base text-white">
+                  {category.name}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
+      </ScrollView>
+    </View>
   );
 };
 
 export default CategoriesScreen;
+

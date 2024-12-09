@@ -1,35 +1,41 @@
+import React from 'react';
 import { View, Text, Image, Pressable } from "react-native";
+import { ProductInfo } from "../../hooks/useProducts";
+import { AntDesign } from '@expo/vector-icons';
 
 type ProductGridItemProps = {
-  imageUrl: string;
-  name: string;
-  price: string;
-  rating?: number;
-  onPress?: () => void;
+  product: ProductInfo;
+  onPress: () => void;
+  onFavoritePress: () => void;
 };
 
-export const ProductGridItem = ({
-  imageUrl,
-  name,
-  price,
-  rating,
-  onPress,
-}: ProductGridItemProps) => (
-  <Pressable className='w-[48%] mb-4' onPress={onPress}>
-    <Image source={{ uri: imageUrl }} className='w-full h-48 mb-2 rounded-lg' />
-    {rating && (
-      <View className='flex-row mb-1'>
-        {[1, 2, 3, 4, 5].map((star) => (
-          <View
-            key={star}
-            className={`w-4 h-4 rounded-full mr-1 ${
-              star <= rating ? "bg-yellow-400" : "bg-gray-600"
-            }`}
-          />
-        ))}
-      </View>
+export const ProductGridItem = ({ product, onPress, onFavoritePress }: ProductGridItemProps) => (
+  <Pressable onPress={onPress} className="mb-4">
+    <View className="relative">
+      <Image 
+        source={
+          product.imageUrl 
+            ? { uri: product.imageUrl }
+            : require("../../assets/images/no-image-available.jpg")
+        }
+        className="w-full h-48 mb-2 rounded-lg"
+      />
+      <Pressable 
+        className="absolute p-2 bg-black bg-opacity-50 rounded-full top-2 right-2"
+        onPress={(e) => {
+          e.stopPropagation();
+          onFavoritePress();
+        }}
+      >
+        <AntDesign name="heart" size={20} color="white" />
+      </Pressable>
+    </View>
+    <Text className="mb-1 text-base text-white">{product.name}</Text>
+    {product.lowestPrice !== null && (
+      <Text className="text-[#4A90E2] text-sm">
+        From ${product.lowestPrice.toFixed(2)}
+      </Text>
     )}
-    <Text className='mb-1 text-white'>{name}</Text>
-    <Text className='text-[#4A90E2]'>{price}</Text>
   </Pressable>
 );
+

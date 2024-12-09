@@ -5,6 +5,7 @@ import * as Font from "expo-font";
 import { SplashScreen } from "expo-router";
 import "../styles/index.css";
 import { AuthProvider, useAuth } from "../context/AuthContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 Font.loadAsync({
   "Poppins-Light": require("../assets/fonts/Poppins-Light.ttf"),
@@ -21,6 +22,8 @@ Font.loadAsync({
 
 SplashScreen.hideAsync();
 
+const queryClient = new QueryClient();
+
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   if (!user) {
@@ -31,25 +34,27 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const Layout = () => {
   return (
-    <AuthProvider>
-      <View className='flex-1 font-sans'>
-        <Stack>
-          <Stack.Screen name='index' options={{ headerShown: false }} />
-          <Stack.Screen name='login' options={{ headerShown: false }} />
-          <Stack.Screen name='register' options={{ headerShown: false }} />
-          <Stack.Screen name='phone-login' options={{ headerShown: false }} />
-          <Stack.Screen
-            name='facebook-login'
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name='forgot-password'
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name='(protected)' options={{ headerShown: false }} />
-        </Stack>
-      </View>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <View className='flex-1 font-sans'>
+          <Stack>
+            <Stack.Screen name='index' options={{ headerShown: false }} />
+            <Stack.Screen name='login' options={{ headerShown: false }} />
+            <Stack.Screen name='register' options={{ headerShown: false }} />
+            <Stack.Screen name='phone-login' options={{ headerShown: false }} />
+            <Stack.Screen
+              name='facebook-login'
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='forgot-password'
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name='(protected)' options={{ headerShown: false }} />
+          </Stack>
+        </View>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };
 

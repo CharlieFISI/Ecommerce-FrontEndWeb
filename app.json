@@ -15,14 +15,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.EcommerceFrontEnd"
+      "bundleIdentifier": "com.geekstore.EcommerceFrontEnd"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.EcommerceFrontEnd"
+      "package": "com.geekstore.EcommerceFrontEnd"
     },
     "web": {
       "bundler": "metro",

@@ -21,7 +21,6 @@ const Register = () => {
   const handleRegister = async () => {
     try {
       await register(firstName, lastName, email, password);
-      // Una vez que el registro es exitoso, iniciamos sesión automáticamente
       await login(email, password);
       router.replace("/home");
     } catch (err) {
