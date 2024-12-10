@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, ImageBackground } from "react-native";
 import { useRouter } from "expo-router";
 import Animated, {
@@ -8,17 +8,18 @@ import Animated, {
   withDelay,
 } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
-
 import { PrimaryButton } from "../components/Buttons/PrimaryButton";
 import { SecondaryButton } from "../components/Buttons/SecondaryButton";
 import { SocialButton } from "../components/Buttons/SocialButton";
 import { useGoogleAuth } from "../hooks/useGoogleAuth";
+import { useFacebookAuth } from "../hooks/useFacebookAuth";
 
-type AppRoutes = "/register" | "/phone-login" | "/facebook-login" | "/login";
+type AppRoutes = "/register" | "/login";
 
 const Index = () => {
   const router = useRouter();
-  const { promptAsync } = useGoogleAuth();
+  const { promptAsyncGoogle } = useGoogleAuth();
+  const { promptAsyncFacebook } = useFacebookAuth();
 
   const logoPosition = useSharedValue(0);
   const contentOpacity = useSharedValue(0);
@@ -85,13 +86,13 @@ const Index = () => {
               <SocialButton
                 title='Continuar con Google'
                 icon='google'
-                onPress={() => promptAsync()}
+                onPress={() => promptAsyncGoogle()}
               />
 
               <SocialButton
                 title='Continuar con Facebook'
                 icon='facebook'
-                onPress={() => handleNavigation("/facebook-login")}
+                onPress={() => promptAsyncFacebook()}
               />
 
               <SecondaryButton

@@ -15,13 +15,13 @@ export const NAV_ITEMS: NavItem[] = [
     id: "shop",
     name: "Shop",
     icon: "shopping-bag",
-    routes: ["/(protected)/categories", "/(protected)/products-by-category"],
+    routes: ["/(protected)/categories", "/(protected)/product-list"],
   },
   {
-    id: "bag",
-    name: "Bag",
+    id: "cart",
+    name: "Cart",
     icon: "shopping-cart",
-    routes: ["/(protected)/bag"],
+    routes: ["/(protected)/cart"],
   },
   {
     id: "favorites",

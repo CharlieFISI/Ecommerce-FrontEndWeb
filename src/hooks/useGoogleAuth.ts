@@ -9,16 +9,16 @@ WebBrowser.maybeCompleteAuthSession();
 export const useGoogleAuth = () => {
   const router = useRouter();
   const { user, authenticateWithGoogle } = useAuth();
-  const [request, response, promptAsync] = Google.useAuthRequest({
+  const [request, response, promptAsyncGoogle] = Google.useAuthRequest({
     webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
     androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
     iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
   });
 
   useEffect(() => {
-    if (response?.type === "success") {
+    if (response && response.type === "success" && response.authentication) {
       const { authentication } = response;
-      handleGoogleAuth(authentication?.accessToken);
+      handleGoogleAuth(authentication.accessToken);
     }
   }, [response]);
 
@@ -38,5 +38,5 @@ export const useGoogleAuth = () => {
     }
   };
 
-  return { promptAsync };
+  return { promptAsyncGoogle };
 };
