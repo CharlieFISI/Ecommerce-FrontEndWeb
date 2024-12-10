@@ -24,6 +24,7 @@ const ProtectedRouteLayout = () => {
       <Stack.Screen name='product-list' options={{ headerShown: false }} />
       <Stack.Screen name='product' options={{ headerShown: false }} />
       <Stack.Screen name='favorites' options={{ headerShown: false }} />
+      <Stack.Screen name='cart' options={{ headerShown: false }} />
       <Stack.Screen name='profile' options={{ headerShown: false }} />
       <Stack.Screen name='settings' options={{ headerShown: false }} />
     </Stack>
