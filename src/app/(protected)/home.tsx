@@ -117,10 +117,15 @@ const Home = () => {
   );
 };
 
-const CategoryProductSection: React.FC<{
+interface CategoryProductSectionProps {
   category: Category;
   router: Router;
-}> = ({ category, router }) => {
+}
+
+const CategoryProductSection = ({
+  category,
+  router,
+}: CategoryProductSectionProps) => {
   const { data: categoryProducts, isLoading } = useProductsByCategory(
     category.id
   );
