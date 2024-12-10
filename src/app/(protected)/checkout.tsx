@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, Pressable, Alert } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  TextInput,
+  Alert,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../hooks/useProducts";
@@ -11,6 +18,10 @@ const CheckoutScreen = () => {
   const { user } = useAuth();
   const { cartItems, calculateTotal } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [name, setName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [cvv, setCvv] = useState("");
 
   const total = calculateTotal();
 
@@ -20,10 +31,15 @@ const CheckoutScreen = () => {
       return;
     }
 
+    if (!cardNumber || !expiryDate || !cvv) {
+      Alert.alert("Error", "Please fill in all payment details.");
+      return;
+    }
+
     setIsProcessing(true);
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
+
       router.push("/success");
     } catch (error) {
       Alert.alert("Error", "Failed to process payment. Please try again.");
@@ -87,6 +103,47 @@ const CheckoutScreen = () => {
           </Pressable>
         </View>
 
+        {/* Payment Information */}
+        <View className='px-4 mb-6'>
+          <Text className='mb-3 text-lg text-white'>Payment Information</Text>
+          <View className='gap-3 space-y-4'>
+            <TextInput
+              className='bg-[#1E1E1E] text-white px-4 py-3 rounded-lg'
+              placeholder='Name'
+              placeholderTextColor='#666'
+              value={name}
+              onChangeText={setName}
+              keyboardType='numeric'
+            />
+            <TextInput
+              className='bg-[#1E1E1E] text-white px-4 py-3 rounded-lg'
+              placeholder='Card Number'
+              placeholderTextColor='#666'
+              value={cardNumber}
+              onChangeText={setCardNumber}
+              keyboardType='numeric'
+            />
+            <View className='flex-row gap-3 space-x-4'>
+              <TextInput
+                className='bg-[#1E1E1E] text-white px-4 py-3 rounded-lg flex-1'
+                placeholder='MM/YY'
+                placeholderTextColor='#666'
+                value={expiryDate}
+                onChangeText={setExpiryDate}
+              />
+              <TextInput
+                className='bg-[#1E1E1E] text-white px-4 py-3 rounded-lg flex-1'
+                placeholder='CVV'
+                placeholderTextColor='#666'
+                value={cvv}
+                onChangeText={setCvv}
+                keyboardType='numeric'
+                secureTextEntry
+              />
+            </View>
+          </View>
+        </View>
+
         {/* Order Summary */}
         <View className='px-4 mb-6'>
           <View className='flex-row justify-between mb-4'>
@@ -109,4 +166,6 @@ const CheckoutScreen = () => {
   );
 };
 
-export default CheckoutScreen;
+export default function Checkout() {
+  return <CheckoutScreen />;
+}
