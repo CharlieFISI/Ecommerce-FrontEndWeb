@@ -3,23 +3,25 @@ import { View, Text, Pressable, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
+import { useOrders } from "../../hooks/useOrders";
 
 const ProfileScreen = () => {
   const router = useRouter();
   const { user, logout } = useAuth();
+  const { data: orders } = useOrders();
 
   const menuItems = [
     {
       id: "orders",
       title: "My orders",
-      subtitle: "Already have 12 orders",
+      subtitle: `${orders?.length || 0} orders`,
       icon: "shopping-bag",
-      onPress: () => console.log("Navigate to orders"),
+      onPress: () => router.push("/orders"),
     },
     {
       id: "payment",
       title: "Payment methods",
-      subtitle: "Visa *34",
+      subtitle: "**** **** ****",
       icon: "credit-card",
       onPress: () => console.log("Navigate to payment methods"),
     },

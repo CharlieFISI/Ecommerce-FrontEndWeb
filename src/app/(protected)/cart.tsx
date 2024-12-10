@@ -113,7 +113,7 @@ const CartScreen = () => {
         </View>
         <Pressable
           className='bg-[#4A90E2] py-4 rounded-xl'
-          onPress={() => router.push("/home")}
+          onPress={() => router.push("/checkout")}
         >
           <Text className='text-lg font-semibold text-center text-white'>
             CHECK OUT
