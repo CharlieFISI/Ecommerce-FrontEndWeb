@@ -2,7 +2,11 @@ import { Stack, Redirect } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
 import { ProtectedLayout } from "../../layout/ProtectedLayout";
 
-const ProtectedLayoutWrapper = ({ children }: { children: React.ReactNode }) => {
+const ProtectedLayoutWrapper = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const { user } = useAuth();
 
   if (!user) {
@@ -15,22 +19,11 @@ const ProtectedLayoutWrapper = ({ children }: { children: React.ReactNode }) => 
 const ProtectedRouteLayout = () => {
   return (
     <Stack>
-      <Stack.Screen
-        name="home"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="categories"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="product-list"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="product"
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name='home' options={{ headerShown: false }} />
+      <Stack.Screen name='categories' options={{ headerShown: false }} />
+      <Stack.Screen name='product-list' options={{ headerShown: false }} />
+      <Stack.Screen name='product' options={{ headerShown: false }} />
+      <Stack.Screen name='favorites' options={{ headerShown: false }} />
     </Stack>
   );
 };
@@ -42,4 +35,3 @@ export default function ProtectedRoutes() {
     </ProtectedLayoutWrapper>
   );
 }
-
