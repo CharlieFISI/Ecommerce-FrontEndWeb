@@ -4,7 +4,7 @@ import { CartItemWithDetails, useCart } from "../../hooks/useProducts";
 import { useRouter } from "expo-router";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { Header } from "../../components/Header/Header";
-// import Slider from "@react-native-community/slider";
+import Slider from "@react-native-community/slider";
 
 const CartScreen = () => {
   const router = useRouter();
@@ -190,7 +190,7 @@ const CartScreen = () => {
             <Text className='mb-4 text-xl font-bold text-white'>
               Edit Quantity
             </Text>
-            {/* <Slider
+            <Slider
               style={{ width: "100%", height: 40 }}
               minimumValue={1}
               maximumValue={activeItem?.productListing.stock || 10}
@@ -199,7 +199,7 @@ const CartScreen = () => {
               onValueChange={setEditQuantity}
               minimumTrackTintColor='#4A90E2'
               maximumTrackTintColor='#FFFFFF'
-            /> */}
+            />
             <Text className='my-4 text-center text-white'>
               Quantity: {editQuantity}
             </Text>
